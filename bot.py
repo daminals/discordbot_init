@@ -1,6 +1,5 @@
 # bot.py
 # Daniel Kogan
-# 02.20.2022
 
 from discord.ext import commands
 from dotenv import load_dotenv
@@ -19,5 +18,5 @@ async def on_ready():
 @bot.command()
 async def ping(ctx):
     await ctx.send("pong")
-    
+
 bot.run(TOKEN)

@@ -23,7 +23,7 @@ fn main() {
 fn get_day() -> String {
     let now = format!("{:?}", chrono::offset::Local::now());
     let f_now = now.split("T").collect::<Vec<&str>>();
-    let disorganized = f_now[0].split("T").collect::<Vec<&str>>();
+    let disorganized = f_now[0].split("-").collect::<Vec<&str>>();
     let organized = organize_date(disorganized);
     return organized.to_owned()
 }
@@ -41,8 +41,8 @@ fn create_bot () {
     let template_bot = config::bot_file();
     let contents = fs::read_to_string(&template_bot).expect("an error occured");
     let mut content_new_lines = contents.lines().collect::<Vec<_>>();
-    let date = &String::from(get_day())[..];
-    content_new_lines[3] = date;
+    let date = &String::from(format!("# {}\n", get_day()))[..];
+    content_new_lines[2] = date;
     for line in content_new_lines {
         writeln!(&mut bot, "{}", line);
     }
@@ -68,15 +68,23 @@ fn create_readme() {
     println!("Created Readme");
 }
 fn create_run() {
-    let mut run = File::create("run").expect("error handling");
+    let mut run = File::create("bot").expect("error handling");
     let run_file = config::run_file();
     let contents = fs::read_to_string(&run_file).expect("an error occured");
-    let mut content_new_lines = contents.lines().collect::<Vec<_>>();
+    let content_new_lines = contents.lines().collect::<Vec<_>>();
     for line in content_new_lines {
-        writeln!(&mut run_file, "{}", line);
+        writeln!(&mut run, "{}", line);
     }
-    let give_perms = format!("chmod 777 run");
+    let give_perms = format!("chmod 777 bot");
     let give_perms_spawn = Command::new("sh").arg("-c").arg(give_perms).stdout(Stdio::piped()).output().unwrap();
-    println!("Created run");
-
+    println!("Created bot");
+}
+fn create_requirements() {
+    let mut req = File::create("requirements.txt").expect("error handling");
+    let req_file = config::requirements();
+    let contents = fs::read_to_string(&req_file).expect("an error occured");
+    let content_new_lines = contents.lines().collect::<Vec<_>>();
+    for line in content_new_lines {
+        writeln!(&mut req, "{}", line);
+    }
 }
