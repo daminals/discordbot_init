@@ -14,10 +14,15 @@ use chrono;
 mod config;
 
 fn main() {
+    create_discord_bot_project();
+}
+fn create_discord_bot_project(){
     create_bot();
     create_dotenv();
     create_readme();
     create_run();
+    create_requirements();
+    git_init();
     create_venv();
 }
 fn get_day() -> String {
@@ -87,4 +92,10 @@ fn create_requirements() {
     for line in content_new_lines {
         writeln!(&mut req, "{}", line);
     }
+    println!("Created requirements.txt");
+}
+fn git_init() {
+    let git_init_cmd = format!("git init");
+    let git_init_spawn = Command::new("sh").arg("-c").arg(git_init_cmd).stdout(Stdio::piped()).output().unwrap();
+    println!("initialized git")
 }
