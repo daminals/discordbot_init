@@ -1,3 +1,5 @@
+[github repo badge: Language](https://img.shields.io/badge/Language-Rust-181717?color=red) 
+
 # discordbot init
 
 A simple command line tool, similar to create-react-app that creates a basic discord bot project for me to work off of. 
