@@ -14,7 +14,11 @@ use chrono;
 mod config;
 
 fn main() {
-    println!("Hello World!");
+    create_bot();
+    create_dotenv();
+    create_readme();
+    create_run();
+    create_venv();
 }
 fn get_day() -> String {
     let now = format!("{:?}", chrono::offset::Local::now());
@@ -34,7 +38,7 @@ fn organize_date(collection: Vec<&str>) -> String{
 
 fn create_bot () {
     let mut bot = File::create("bot.py").expect("error handling");
-    let template_bot = format!("");
+    let template_bot = config::bot_file();
     let contents = fs::read_to_string(&template_bot).expect("an error occured");
     let mut content_new_lines = contents.lines().collect::<Vec<_>>();
     let date = &String::from(get_day())[..];
@@ -64,5 +68,15 @@ fn create_readme() {
     println!("Created Readme");
 }
 fn create_run() {
+    let mut run = File::create("run").expect("error handling");
+    let run_file = config::run_file();
+    let contents = fs::read_to_string(&run_file).expect("an error occured");
+    let mut content_new_lines = contents.lines().collect::<Vec<_>>();
+    for line in content_new_lines {
+        writeln!(&mut run_file, "{}", line);
+    }
+    let give_perms = format!("chmod 777 run");
+    let give_perms_spawn = Command::new("sh").arg("-c").arg(give_perms).stdout(Stdio::piped()).output().unwrap();
+    println!("Created run");
 
 }
