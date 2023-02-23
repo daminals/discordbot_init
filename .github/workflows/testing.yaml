@@ -23,6 +23,9 @@ jobs:
     - name: Clean bin and make
       run: make -f MakeFile clean all -C . && echo "build done"
 
+    - name: Set Test Environment Vars
+      run: echo "HOMEDIR=../\nTOKEN=token" >> .env
+
     - name: Compile Rust Program
       run: cargo build
 
