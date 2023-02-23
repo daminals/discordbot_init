@@ -1,4 +1,4 @@
-name: Blackbox Tests
+name: Unit Tests
 
 on:
   push:
@@ -48,7 +48,8 @@ jobs:
         cd ..
 
     - name: Run Test Cases
-      run: |
-        ls test_output
-        bin/discordinit_tests -S --verbose=0 --timeout 30
+      run: bin/discordinit_tests -S --verbose=0 --timeout 30
+
+    - name: Delete Test Output
+      run: rm -rf test_output/* && touch test_output/.gitkeep
 

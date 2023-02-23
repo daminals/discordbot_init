@@ -3,9 +3,7 @@
 // 02.20.2022
 
 use chrono;
-use indicatif::{ProgressBar, ProgressState, ProgressStyle};
-use std::env;
-use std::fmt;
+use indicatif::{ProgressBar, ProgressStyle};
 use std::fs;
 use std::fs::File;
 use std::io::prelude::*;
