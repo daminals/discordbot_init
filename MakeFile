@@ -1,62 +1,29 @@
-CC := gcc
-SRCD := src
-TSTD := tests
-BLDD := build
-BIND := bin
-INCD := include
-LIBD := lib
+# Compiler settings
+CC = gcc
+CFLAGS = -Wall -Wextra -std=c11 -O2
+LDFLAGS = -lm -lcriterion
 
-EXEC := discordinit
-TEST_EXEC := $(EXEC)_tests
+# Directories
+SRCDIR = src
+TESTDIR = tests
+BUILDDIR = build
 
-MAIN := $(BLDD)/main.o
+# Files
+SRCS = $(wildcard $(SRCDIR)/*.c)
+OBJS = $(SRCS:$(SRCDIR)/%.c=$(BUILDDIR)/%.o)
+TESTS = $(wildcard $(TESTDIR)/*.c)
+TEST_BINS = $(TESTS:$(TESTDIR)/%.c=$(BUILDDIR)/%)
 
-ALL_OBJF := $(patsubst $(SRCD)/%,$(BLDD)/%,$(shell find $(SRCD) -type f -name *.c))
-ALL_FUNCF := $(filter-out $(MAIN) $(AUX), $(ALL_OBJF))
+# Targets
+all: $(TEST_BINS)
 
-TEST_SRCF := $(shell find $(TSTD) -type f -name *.c)
+$(BUILDDIR)/%.o: $(SRCDIR)/%.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
-INC := -I $(INCD) -I $(LIBD)
-
-CFLAGS := -Wall -Werror -Wno-unused-variable -Wno-unused-function -MMD -fcommon
-COLORF := -DCOLOR
-DFLAGS := -g -DDEBUG -DCOLOR
-PRINT_STAMENTS := -DERROR -DSUCCESS -DWARN -DINFO
-
-STD := -std=gnu11
-TEST_LIB := -L/usr/local/lib -lcriterion
-LIBS := $(LIB)
-
-CFLAGS += $(STD)
-
-.PHONY: clean all setup debug
-
-all: setup $(LIB) $(BIND)/$(EXEC) $(BIND)/$(TEST_EXEC)
-
-debug: CFLAGS += $(DFLAGS) $(PRINT_STAMENTS) $(COLORF)
-debug: all
-
-setup: $(BIND) $(BLDD)
-$(BIND):
-	mkdir -p $(BIND)
-$(BLDD):
-	mkdir -p $(BLDD)
-
-$(BIND)/$(EXEC): $(MAIN) $(ALL_FUNCF)
-	$(CC) $(MAIN) $(ALL_FUNCF) -o $@ $(LIBS)
-
-$(BIND)/$(TEST_EXEC): $(ALL_FUNCF) $(TEST_SRCF)
-	$(CC) $(CFLAGS) $(INC) $(ALL_TESTF) $(ALL_FUNCF) $(TEST_SRCF) $(TEST_LIB) $(LIBS) -o $@
-
-$(BLDD)/%.o: $(SRCD)/%.c
-	$(CC) $(CFLAGS) $(INC) -c -o $@ $<
-
-$(LIBD)/%.o: $(LIBD)/%.c
-	$(CC) $(CFLAGS) $(INC) -c -o $@ $<
-	strip --strip-unneeded $@
+$(BUILDDIR)/%: $(TESTDIR)/%.c $(OBJS)
+	$(CC) $(CFLAGS) $< $(OBJS) $(LDFLAGS) -o $@
 
 clean:
-	rm -rf $(BLDD)/* $(BIND)/* $(LIB)/*
+	rm -rf $(BUILDDIR)
 
-.PRECIOUS: $(BLDD)/*.d
--include $(BLDD)/*.d
+.PHONY: all clean
