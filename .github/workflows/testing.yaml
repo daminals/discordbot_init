@@ -23,6 +23,9 @@ jobs:
     - name: Clean bin and make
       run: make -f MakeFile clean all -C . && echo "build done"
 
+    - name: Compile Rust Program
+      run: cargo build
+
     - name: Run Test Cases
       run: bin/discordinit_tests -S --verbose=0 --timeout 30
 

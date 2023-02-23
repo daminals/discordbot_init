@@ -6,7 +6,7 @@ static char *progname = "target/debug/discordbot";
 
 Test(basecode_suite, init_equality_test) {
     // run the bot init in test output
-    char *cmd = "cargo build && cd test_output && ../target/debug/discordbot > basic_test.out && cd ..";
+    char *cmd = "test_output && ../target/debug/discordbot > basic_test.out && cd ..";
     // compare the output to the reference output
     char *cmp_bot = "cmp test_output/run.sh rsrc/bot";
     char *cmp_bot_txt = "cmp test_output/bot rsrc/bot";

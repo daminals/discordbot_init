@@ -4,19 +4,19 @@ use load_dotenv::load_dotenv;
 load_dotenv!();
 
 pub fn bot_file() -> String {
-  return String::from(env!("HOMEDIR")) + "/rsrc/bot.txt";
+  return String::from(env!("HOMEDIR")) + "rsrc/bot.txt";
 } 
 
 pub fn run_file () -> String {
-  return String::from(env!("HOMEDIR")) + "/rsrc/bot";
+  return String::from(env!("HOMEDIR")) + "rsrc/bot";
 }
 
 pub fn requirements() -> String {
-  return String::from(env!("HOMEDIR")) + "/rsrc/requirements.txt";
+  return String::from(env!("HOMEDIR")) + "rsrc/requirements.txt";
 }
 
 pub fn readme_file() -> String {
-  return String::from(env!("HOMEDIR")) + "/rsrc/readme.txt";
+  return String::from(env!("HOMEDIR")) + "rsrc/readme.txt";
 }
 
 pub fn add_token() -> String {
