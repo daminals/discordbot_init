@@ -21,7 +21,7 @@ jobs:
       run: sudo apt-get install libcriterion-dev
 
     - name: Clean bin and make
-      run: make -m MakeFile -C tests
+      run: make -C tests
 
     - name: Run Test Cases
       run: bin/discordinit_tests -S --verbose=0 --timeout 30
