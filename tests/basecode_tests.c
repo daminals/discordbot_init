@@ -18,7 +18,7 @@ Test(basecode_suite, init_equality_test) {
     //              "Program exited with 0x%x instead of EXIT_SUCCESS",
 		//  return_code);
      
-    return_code = WEXITSTATUS(system(cmp_bot));
+    int return_code = WEXITSTATUS(system(cmp_bot));
     cr_assert_eq(return_code, EXIT_SUCCESS,
                  "Program output did not match reference output.");
 
