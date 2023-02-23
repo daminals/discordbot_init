@@ -45,7 +45,7 @@ Test(basecode_suite, venv_exists) {
 Test(basecode_suite, git_exists) {
     // check if git was initialized
     char *git = "test_output/.git";
-    fp = fopen(git, "r");
+    FILE* fp = fopen(git, "r");
     cr_assert_not_null(fp, "git not initialized.");
     fclose(fp);
 }
