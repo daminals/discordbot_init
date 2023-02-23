@@ -1,29 +1,67 @@
-# Compiler settings
-CC = gcc
-CFLAGS = -Wall -Wextra -std=c11 -O2
-LDFLAGS = -lm -lcriterion
+CC := gcc
+SRCD := src
+TSTD := tests
+BLDD := build
+BIND := bin
+INCD := include
+LIBD := lib
 
-# Directories
-SRCDIR = src
-TESTDIR = tests
-BUILDDIR = build
+EXEC := discordinit
+TEST_EXEC := $(EXEC)_tests
 
-# Files
-SRCS = $(wildcard $(SRCDIR)/*.c)
-OBJS = $(SRCS:$(SRCDIR)/%.c=$(BUILDDIR)/%.o)
-TESTS = $(wildcard $(TESTDIR)/*.c)
-TEST_BINS = $(TESTS:$(TESTDIR)/%.c=$(BUILDDIR)/%)
+MAIN := $(BLDD)/main.o
 
-# Targets
-all: $(TEST_BINS)
+#LIB :=
+#LIB := $(LIBD)/$(EXEC).a
 
-$(BUILDDIR)/%.o: $(SRCDIR)/%.c
-	$(CC) $(CFLAGS) -c $< -o $@
+ALL_SRCF := $(shell find $(SRCD) -type f -name *.c)
+ALL_OBJF := $(patsubst $(SRCD)/%,$(BLDD)/%,$(ALL_SRCF:.c=.o))
+ALL_FUNCF := $(filter-out $(MAIN) $(AUX), $(ALL_OBJF))
 
-$(BUILDDIR)/%: $(TESTDIR)/%.c $(OBJS)
-	$(CC) $(CFLAGS) $< $(OBJS) $(LDFLAGS) -o $@
+TEST_ALL_SRCF := $(shell find $(TSTD) -type f -name *.c)
+TEST_SRCF := $(filter-out $(TEST_REF_SRCF), $(TEST_ALL_SRCF))
+
+INC := -I $(INCD) -I $(LIBD)
+
+CFLAGS := -Wall -Werror -Wno-unused-variable -Wno-unused-function -MMD -fcommon
+COLORF := -DCOLOR
+DFLAGS := -g -DDEBUG -DCOLOR
+PRINT_STAMENTS := -DERROR -DSUCCESS -DWARN -DINFO
+
+STD := -std=gnu11
+TEST_LIB := -L/usr/local/lib -lcriterion
+LIBS := $(LIB)
+
+CFLAGS += $(STD)
+
+.PHONY: clean all setup debug
+
+all: setup $(LIB) $(BIND)/$(EXEC) $(BIND)/$(TEST_EXEC)
+
+debug: CFLAGS += $(DFLAGS) $(PRINT_STAMENTS) $(COLORF)
+debug: all
+
+setup: $(BIND) $(BLDD)
+$(BIND):
+	mkdir -p $(BIND)
+$(BLDD):
+	mkdir -p $(BLDD)
+
+$(BIND)/$(EXEC): $(MAIN) $(ALL_FUNCF)
+	$(CC) $(MAIN) $(ALL_FUNCF) -o $@ $(LIBS)
+
+$(BIND)/$(TEST_EXEC): $(ALL_FUNCF) $(TEST_SRCF)
+	$(CC) $(CFLAGS) $(INC) $(ALL_TESTF) $(ALL_FUNCF) $(TEST_SRCF) $(TEST_LIB) $(LIBS) -o $@
+
+$(BLDD)/%.o: $(SRCD)/%.c
+	$(CC) $(CFLAGS) $(INC) -c -o $@ $<
+
+$(LIBD)/%.o: $(LIBD)/%.c
+	$(CC) $(CFLAGS) $(INC) -c -o $@ $<
+	strip --strip-unneeded $@
 
 clean:
-	rm -rf $(BUILDDIR)
+	rm -rf $(BLDD) $(BIND) $(LIB)
 
-.PHONY: all clean
+.PRECIOUS: $(BLDD)/*.d
+-include $(BLDD)/*.d
