@@ -41,6 +41,12 @@ jobs:
     - name: Compile Rust Program
       run: cargo build
 
+    - name: Run Rust Program
+      run: |
+        cd test_output 
+        ../target/debug/discordbot > basic_test.out 
+        cd ..
+
     - name: Run Test Cases
       run: |
         ls test_output
