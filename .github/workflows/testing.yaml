@@ -24,6 +24,7 @@ jobs:
       run: |
         echo "#include <stdio.h>" > src/main.c
         echo "int main() { printf(\"Hello World\"); }" >> src/main.c
+        cat src/main.c
 
     - name: Clean bin and make
       run: make -f MakeFile clean all -C . && echo "build done"
@@ -38,5 +39,7 @@ jobs:
       run: cargo build
 
     - name: Run Test Cases
-      run: bin/discordinit_tests -S --verbose=0 --timeout 30
+      run: |
+        ls test_output
+        bin/discordinit_tests -S --verbose=0 --timeout 30
 
