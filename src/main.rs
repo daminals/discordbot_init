@@ -55,10 +55,11 @@ fn create_bot () {
 }
 fn create_dotenv() {
     let mut dotenv = File::create(".env").expect("error handling");
-    writeln!(&mut dotenv, "TOKEN=\"\"").unwrap();
+    let token = config::add_token();
+    writeln!(&mut dotenv, "{}",token).unwrap();
     println!("Created .env");
     let mut dotenvExample = File::create(".env.example").expect("error handling");
-    writeln!(&mut dotenvExample, "TOKEN=\"\"").unwrap();
+    writeln!(&mut dotenvExample, "TOKEN=token").unwrap();
     println!("Created .env.example");
 }
 fn create_venv() {
@@ -66,6 +67,10 @@ fn create_venv() {
     let venv_stdout = Command::new("sh").arg("-c").arg(venv)
         .stdout(Stdio::piped()).output().unwrap();
     println!("Created venv");
+    let download_py = "source venv/bin/activate && pip install -r requirements.txt";
+    let download_py_stdout = Command::new("sh").arg("-c").arg(download_py)
+    .stdout(Stdio::piped()).output().unwrap();
+    println!("Installed requirements.txt");
 }
 fn create_readme() {
   let mut readme = File::create("README.md").expect("error handling");
