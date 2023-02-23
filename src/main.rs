@@ -57,6 +57,9 @@ fn create_dotenv() {
     let mut dotenv = File::create(".env").expect("error handling");
     writeln!(&mut dotenv, "TOKEN=\"\"").unwrap();
     println!("Created .env");
+    let mut dotenvExample = File::create(".env.example").expect("error handling");
+    writeln!(&mut dotenvExample, "TOKEN=\"\"").unwrap();
+    println!("Created .env.example");
 }
 fn create_venv() {
     let venv = "python3 -m venv venv";
@@ -65,24 +68,26 @@ fn create_venv() {
     println!("Created venv");
 }
 fn create_readme() {
-    let get_basedir_cmd = format!("echo $(basename \"$PWD\")");
-    let get_basedir_spawn = Command::new("sh").arg("-c").arg(get_basedir_cmd).stdout(Stdio::piped()).output().unwrap();
-    let get_basedir_str = String::from_utf8(get_basedir_spawn.stdout).unwrap();
-    let mut readme = File::create("Readme.md").expect("error handling");
-    writeln!(&mut readme, "# {}", get_basedir_str);
-    println!("Created Readme");
+  let mut readme = File::create("README.md").expect("error handling");
+  let readme_file = config::readme_file();
+  let contents = fs::read_to_string(&readme_file).expect("an error occured");
+  let mut content_new_lines = contents.lines().collect::<Vec<_>>();
+  for line in content_new_lines {
+      writeln!(&mut readme, "{}", line);
+  }
+  println!("Created README.md");
 }
 fn create_run() {
-    let mut run = File::create("bot").expect("error handling");
+    let mut run = File::create("run.sh").expect("error handling");
     let run_file = config::run_file();
     let contents = fs::read_to_string(&run_file).expect("an error occured");
     let content_new_lines = contents.lines().collect::<Vec<_>>();
     for line in content_new_lines {
         writeln!(&mut run, "{}", line);
     }
-    let give_perms = format!("chmod 777 bot");
+    let give_perms = format!("chmod 777 run.sh");
     let give_perms_spawn = Command::new("sh").arg("-c").arg(give_perms).stdout(Stdio::piped()).output().unwrap();
-    println!("Created bot");
+    println!("Created run.sh");
 }
 fn create_requirements() {
     let mut req = File::create("requirements.txt").expect("error handling");
