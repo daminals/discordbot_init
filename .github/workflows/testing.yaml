@@ -20,6 +20,11 @@ jobs:
     - name: Download and install criterion
       run: sudo apt-get install libcriterion-dev
 
+    - name: Create C main to Compile
+      run: |
+        echo "#include <stdio.h>" > src/main.c
+        echo "int main() { printf(\"Hello World\"); }" >> src/main.c
+
     - name: Clean bin and make
       run: make -f MakeFile clean all -C . && echo "build done"
 
