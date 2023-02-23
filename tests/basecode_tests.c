@@ -1,5 +1,6 @@
 #include <criterion/criterion.h>
 #include <criterion/logging.h>
+#include <stdio.h>
 
 static char *progname = "target/debug/discordbot";
 
