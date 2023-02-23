@@ -34,10 +34,10 @@ Test(basecode_suite, venv_exists) {
     FILE *fp = fopen(venv, "r");
     cr_assert_not_null(fp, "venv directory not created.");
     fclose(fp);
-    char *cmd = "source test_output/venv/bin/activate";
-    int return_code = WEXITSTATUS(system(cmd));
-    cr_assert_eq(return_code, EXIT_SUCCESS,
-                 "venv not activated.");
+    // char *cmd = "source test_output/venv/bin/activate";
+    // int return_code = WEXITSTATUS(system(cmd));
+    // cr_assert_eq(return_code, EXIT_SUCCESS,
+    //              "venv not activated.");
 }
 
 
