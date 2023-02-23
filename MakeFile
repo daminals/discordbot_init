@@ -1,5 +1,4 @@
 CC := gcc
-SRCD := src
 TSTD := tests
 BLDD := build
 BIND := bin
@@ -11,15 +10,12 @@ TEST_EXEC := $(EXEC)_tests
 
 MAIN := $(BLDD)/main.o
 
-#LIB :=
-#LIB := $(LIBD)/$(EXEC).a
+# ALL_SRCF :=
+# ALL_OBJF :=
+# ALL_FUNCF :=
 
-ALL_SRCF := $(shell find $(SRCD) -type f -name *.c)
-ALL_OBJF := $(patsubst $(SRCD)/%,$(BLDD)/%,$(ALL_SRCF:.c=.o))
-ALL_FUNCF := $(filter-out $(MAIN) $(AUX), $(ALL_OBJF))
-
-TEST_SRCF := $(shell find $(TSTD) -type f -name *.c)
-TEST_OBJF := $(patsubst $(TSTD)/%,$(BLDD)/%,$(TEST_SRCF:.c=.o))
+TEST_ALL_SRCF := $(shell find $(TSTD) -type f -name *.c)
+TEST_SRCF := $(filter-out $(TEST_REF_SRCF), $(TEST_ALL_SRCF))
 
 INC := -I $(INCD) -I $(LIBD)
 
@@ -36,7 +32,7 @@ CFLAGS += $(STD)
 
 .PHONY: clean all setup debug
 
-all: setup $(BIND)/$(EXEC) $(BIND)/$(TEST_EXEC)
+all: setup $(BIND)/$(TEST_EXEC)
 
 debug: CFLAGS += $(DFLAGS) $(PRINT_STAMENTS) $(COLORF)
 debug: all
@@ -50,13 +46,10 @@ $(BLDD):
 $(BIND)/$(EXEC): $(MAIN) $(ALL_FUNCF)
 	$(CC) $(MAIN) $(ALL_FUNCF) -o $@ $(LIBS)
 
-$(BIND)/$(TEST_EXEC): $(TEST_OBJF) $(ALL_FUNCF)
-	$(CC) $(CFLAGS) $(INC) $(TEST_OBJF) $(ALL_FUNCF) $(TEST_LIB) $(LIBS) -o $@
+$(BIND)/$(TEST_EXEC): $(TEST_SRCF)
+	$(CC) $(CFLAGS) $(INC) $(TEST_SRCF) $(TEST_LIB) $(LIBS) -o $@
 
 $(BLDD)/%.o: $(SRCD)/%.c
-	$(CC) $(CFLAGS) $(INC) -c -o $@ $<
-
-$(BLDD)/%.o: $(TSTD)/%.c
 	$(CC) $(CFLAGS) $(INC) -c -o $@ $<
 
 $(LIBD)/%.o: $(LIBD)/%.c
