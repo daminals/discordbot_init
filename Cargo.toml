@@ -7,3 +7,5 @@ edition = "2021"
 
 [dependencies]
 chrono = "*"
+load-dotenv = "*"
+indicatif = "*"
