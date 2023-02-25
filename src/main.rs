@@ -6,10 +6,12 @@ use chrono;
 use indicatif::{ProgressBar, ProgressStyle};
 use std::fs;
 use std::fs::File;
-use std::io::prelude::*;
-use std::io::{self, Result, Write};
-use std::path::Path;
-use std::process::{exit, Command, Stdio};
+// use std::io::prelude::*;
+// use std::io::{self, Result, Write};
+use std::io::Write;
+// use std::path::Path;
+use std::process::{Command, Stdio};
+// use std::process::exit;
 
 mod config;
 
@@ -100,7 +102,9 @@ fn create_bot() {
     let date: &str = &String::from(format!("# {}\n", get_day()))[..];
     content_new_lines[2] = date;
     for line in content_new_lines {
-        writeln!(&mut bot, "{}", line);
+      if let Err(e) = writeln!(&mut bot, "{}", line) {
+        eprintln!("Couldn't write to file: {}", e);
+      }
     }
     // println!("Created bot.py");
 }
@@ -115,7 +119,8 @@ fn create_dotenv() {
 }
 fn create_venv() {
     let venv = "python3 -m venv venv";
-    let venv_stdout = Command::new("sh")
+    // let venv_stdout = Command::new("sh")
+    Command::new("sh")
         .arg("-c")
         .arg(venv)
         .stdout(Stdio::piped())
@@ -126,7 +131,8 @@ fn create_venv() {
 
 fn install_requirements() {
     let download_py = "source venv/bin/activate && pip install -r requirements.txt";
-    let download_py_stdout = Command::new("sh")
+    // let download_py_stdout = Command::new("sh")
+    Command::new("sh")
         .arg("-c")
         .arg(download_py)
         .stdout(Stdio::piped())
@@ -141,7 +147,9 @@ fn create_readme() {
     let contents = fs::read_to_string(&readme_file).expect("an error occured");
     let content_new_lines = contents.lines().collect::<Vec<_>>();
     for line in content_new_lines {
-        writeln!(&mut readme, "{}", line);
+      if let Err(e) = writeln!(&mut readme, "{}", line) {
+        eprintln!("Couldn't write to file: {}", e);
+      }
     }
     // println!("Created README.md");
 }
@@ -151,13 +159,16 @@ fn create_run() {
     let contents = fs::read_to_string(&run_file).expect("an error occured");
     let content_new_lines = contents.lines().collect::<Vec<_>>();
     for line in content_new_lines {
-        writeln!(&mut run, "{}", line);
+      if let Err(e) = writeln!(&mut run, "{}", line) {
+        eprintln!("Couldn't write to file: {}", e);
+      }
     }
     // println!("Created run.sh");
 }
 fn give_permissions() {
   let give_perms = format!("chmod 777 run.sh");
-  let give_perms_spawn = Command::new("sh")
+  // let give_perms_spawn = Command::new("sh")
+  Command::new("sh")
       .arg("-c")
       .arg(give_perms)
       .stdout(Stdio::piped())
@@ -172,13 +183,16 @@ fn create_requirements() {
     let contents = fs::read_to_string(&req_file).expect("an error occured");
     let content_new_lines = contents.lines().collect::<Vec<_>>();
     for line in content_new_lines {
-        writeln!(&mut req, "{}", line);
+        if let Err(e) = writeln!(&mut req, "{}", line) {
+            eprintln!("Couldn't write to file: {}", e.to_string());
+        }
     }
     // println!("Created requirements.txt");
 }
 fn git_init() {
     let git_init_cmd = format!("git init");
-    let git_init_spawn = Command::new("sh")
+    // let git_init_spawn = Command::new("sh")
+    Command::new("sh")
         .arg("-c")
         .arg(git_init_cmd)
         .stdout(Stdio::piped())
