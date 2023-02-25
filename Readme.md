@@ -1,4 +1,4 @@
-![github repo badge: Language](https://img.shields.io/badge/Language-Rust-181717?color=red) 
+![github repo badge: Language](https://img.shields.io/badge/Language-Rust-181717?color=red) [![Unit Tests](https://github.com/daminals/rust-discordbot-init/actions/workflows/testing.yaml/badge.svg)](https://github.com/daminals/rust-discordbot-init/actions/workflows/testing.yaml)
 
 # discordbot init
 
