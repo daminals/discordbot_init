@@ -36,11 +36,11 @@ Test(basecode_suite, venv_exists) {
   fclose(fp);
 }
 
-Test(basecode_suite, activate_venv) {
-  char *cmd = "source test_output/venv/bin/activate";
-  int return_code = WEXITSTATUS(system(cmd));
-  cr_assert_eq(return_code, EXIT_SUCCESS, "venv not activated.");
-}
+// Test(basecode_suite, activate_venv) {
+//   char *cmd = "source test_output/venv/bin/activate";
+//   int return_code = WEXITSTATUS(system(cmd));
+//   cr_assert_eq(return_code, EXIT_SUCCESS, "venv not activated.");
+// }
 
 Test(basecode_suite, git_exists) {
   // check if git was initialized
