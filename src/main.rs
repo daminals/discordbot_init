@@ -68,7 +68,7 @@ fn create_discord_bot_project(verbose: bool) {
 
     let bar = ProgressBar::new(100);
     bar.set_style(
-        ProgressStyle::with_template("[\u{001b}[1m{elapsed}\u{001b}[0m][{wide_bar:.green}](\u{001b}[1m{eta}\u{001b}[0m)")
+        ProgressStyle::with_template("\u{001b}[1m[{elapsed}]\u{001b}[0m[{wide_bar:.green}]\u{001b}[1m({eta})\u{001b}[0m")
             .unwrap()
             .progress_chars("#>-"),
     );
