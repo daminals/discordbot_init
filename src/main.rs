@@ -20,15 +20,15 @@ fn main() {
 
 fn create_discord_bot_project() {
     println!("Creating discord bot project⏳");
-    println!("[1]: Create bot.py");
-    println!("[2]: Create .env and .env.example");
-    println!("[3]: Create Readme.md");
-    println!("[4]: Create run.sh");
-    println!("[5]: Create requirements.txt");
-    println!("[6]: Run git init");
-    println!("[7]: Create venv");
-    println!("[8]: Install requirements.txt");
-    println!("[9]: Give run.sh permissions");
+    // println!("[1]: Create bot.py");
+    // println!("[2]: Create .env and .env.example");
+    // println!("[3]: Create Readme.md");
+    // println!("[4]: Create run.sh");
+    // println!("[5]: Create requirements.txt");
+    // println!("[6]: Run git init");
+    // println!("[7]: Create venv");
+    // println!("[8]: Install requirements.txt");
+    // println!("[9]: Give run.sh permissions");
 
     let bar = ProgressBar::new(100);
     bar.set_style(
@@ -36,23 +36,42 @@ fn create_discord_bot_project() {
             .unwrap()
             .progress_chars("#>-"),
     );
-
+    bar.println("[1]: Create bot.py");
     create_bot();
-    bar.inc(10);
+    bar.inc(6);
+
+    bar.println("[2]: Create .env and .env.example");
     create_dotenv();
     bar.inc(6);
+
+    bar.println("[3]: Create Readme.md");
     create_readme();
     bar.inc(2);
+
+    bar.println("[4]: Create run.sh");
     create_run();
     bar.inc(2);
+
+    bar.println("[5]: Create requirements.txt");
     create_requirements();
     bar.inc(5);
+
+    bar.println("[6]: Run git init");
     git_init();
     bar.inc(10);
+
+    bar.println("[7]: Create venv");
     create_venv();
     bar.inc(40);
+
+    bar.println("[8]: Install requirements.txt");
     install_requirements();
     bar.inc(20);
+
+    bar.println("[9]: Give run.sh permissions");
+    give_permissions();
+    bar.inc(4);
+
     bar.finish();
 }
 
@@ -78,7 +97,7 @@ fn create_bot() {
     let template_bot = config::bot_file();
     let contents = fs::read_to_string(&template_bot).expect("an error occured");
     let mut content_new_lines = contents.lines().collect::<Vec<_>>();
-    let date = &String::from(format!("# {}\n", get_day()))[..];
+    let date: &str = &String::from(format!("# {}\n", get_day()))[..];
     content_new_lines[2] = date;
     for line in content_new_lines {
         writeln!(&mut bot, "{}", line);
@@ -134,15 +153,19 @@ fn create_run() {
     for line in content_new_lines {
         writeln!(&mut run, "{}", line);
     }
-    let give_perms = format!("chmod 777 run.sh");
-    let give_perms_spawn = Command::new("sh")
-        .arg("-c")
-        .arg(give_perms)
-        .stdout(Stdio::piped())
-        .output()
-        .unwrap();
     // println!("Created run.sh");
 }
+fn give_permissions() {
+  let give_perms = format!("chmod 777 run.sh");
+  let give_perms_spawn = Command::new("sh")
+      .arg("-c")
+      .arg(give_perms)
+      .stdout(Stdio::piped())
+      .output()
+      .unwrap();
+    // println!("Gave run.sh permissions");
+}
+
 fn create_requirements() {
     let mut req = File::create("requirements.txt").expect("error handling");
     let req_file = config::requirements();
