@@ -10,13 +10,34 @@ use std::fs::File;
 // use std::io::{self, Result, Write};
 use std::io::Write;
 // use std::path::Path;
-use std::process::{Command, Stdio};
-// use std::process::exit;
+use std::process::{Command, Stdio, exit};
+// use clap::Command as cliCommand;
+// use clap::{Arg};
+use clap::Parser;
 
 mod config;
 
+static RED: &str = "\u{001b}[31m";
+static GREEN: &str = "\u{001b}[32m";
+static CLEAR_FORMAT: &str = "\u{001b}[0m";
+
+
+#[derive(Parser,Default,Debug)]
+#[clap(author="Daniel Kogan", about="Tool to create a simple discord bot project")]
+struct Arguments{
+
+}
+
 fn main() {
+    let args = Arguments::parse();
     // dotenv::from_path("~/bin/rust-discordbot-init/.env").expect("Encountered an error reading .env");
+    ctrlc::set_handler(move || {
+        // exit program early
+        println!("{} Exiting Program...{}", RED, CLEAR_FORMAT);
+        exit(0); // actually exit program
+    })
+    .expect("Error setting Ctrl-C handler");
+
     create_discord_bot_project();
 }
 
@@ -102,9 +123,9 @@ fn create_bot() {
     let date: &str = &String::from(format!("# {}\n", get_day()))[..];
     content_new_lines[2] = date;
     for line in content_new_lines {
-      if let Err(e) = writeln!(&mut bot, "{}", line) {
-        eprintln!("Couldn't write to file: {}", e);
-      }
+        if let Err(e) = writeln!(&mut bot, "{}", line) {
+            eprintln!("Couldn't write to file: {}", e);
+        }
     }
     // println!("Created bot.py");
 }
@@ -147,9 +168,9 @@ fn create_readme() {
     let contents = fs::read_to_string(&readme_file).expect("an error occured");
     let content_new_lines = contents.lines().collect::<Vec<_>>();
     for line in content_new_lines {
-      if let Err(e) = writeln!(&mut readme, "{}", line) {
-        eprintln!("Couldn't write to file: {}", e);
-      }
+        if let Err(e) = writeln!(&mut readme, "{}", line) {
+            eprintln!("Couldn't write to file: {}", e);
+        }
     }
     // println!("Created README.md");
 }
@@ -159,21 +180,21 @@ fn create_run() {
     let contents = fs::read_to_string(&run_file).expect("an error occured");
     let content_new_lines = contents.lines().collect::<Vec<_>>();
     for line in content_new_lines {
-      if let Err(e) = writeln!(&mut run, "{}", line) {
-        eprintln!("Couldn't write to file: {}", e);
-      }
+        if let Err(e) = writeln!(&mut run, "{}", line) {
+            eprintln!("Couldn't write to file: {}", e);
+        }
     }
     // println!("Created run.sh");
 }
 fn give_permissions() {
-  let give_perms = format!("chmod 777 run.sh");
-  // let give_perms_spawn = Command::new("sh")
-  Command::new("sh")
-      .arg("-c")
-      .arg(give_perms)
-      .stdout(Stdio::piped())
-      .output()
-      .unwrap();
+    let give_perms = format!("chmod 777 run.sh");
+    // let give_perms_spawn = Command::new("sh")
+    Command::new("sh")
+        .arg("-c")
+        .arg(give_perms)
+        .stdout(Stdio::piped())
+        .output()
+        .unwrap();
     // println!("Gave run.sh permissions");
 }
 

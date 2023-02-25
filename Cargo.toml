@@ -9,3 +9,5 @@ edition = "2021"
 chrono = "*"
 load-dotenv = "*"
 indicatif = "*"
+clap = { version = "*", features = ["derive"] }
+ctrlc = { version = "3.0", features = ["termination"] }
