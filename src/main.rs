@@ -10,7 +10,7 @@ use std::fs::File;
 // use std::io::{self, Result, Write};
 use std::io::Write;
 // use std::path::Path;
-use std::process::{Command, Stdio, exit};
+use std::process::{exit, Command, Stdio};
 // use clap::Command as cliCommand;
 // use clap::{Arg};
 use clap::Parser;
@@ -19,13 +19,19 @@ mod config;
 
 static RED: &str = "\u{001b}[31m";
 static GREEN: &str = "\u{001b}[32m";
+static BOLD: &str = "\u{001b}[1m";
+static UNDERLINE: &str = "\u{001b}[4m";
 static CLEAR_FORMAT: &str = "\u{001b}[0m";
 
+#[derive(Parser, Default, Debug)]
+#[clap(
+    author = "Daniel Kogan",
+    about = "Tool to create a simple discord bot project"
+)]
 
-#[derive(Parser,Default,Debug)]
-#[clap(author="Daniel Kogan", about="Tool to create a simple discord bot project")]
-struct Arguments{
-
+struct Arguments {
+    #[clap(short, long, default_value = "true")]
+    verbose: bool, // default is true
 }
 
 fn main() {
@@ -38,11 +44,13 @@ fn main() {
     })
     .expect("Error setting Ctrl-C handler");
 
-    create_discord_bot_project();
+    create_discord_bot_project(args.verbose);
 }
 
-fn create_discord_bot_project() {
-    println!("Creating discord bot project⏳");
+fn create_discord_bot_project(verbosity: bool) {
+    println!("+================================+");
+    println!("+ {}Creating discord bot project{}   +",BOLD, CLEAR_FORMAT);
+    println!("+================================+");
     // println!("[1]: Create bot.py");
     // println!("[2]: Create .env and .env.example");
     // println!("[3]: Create Readme.md");
@@ -59,39 +67,58 @@ fn create_discord_bot_project() {
             .unwrap()
             .progress_chars("#>-"),
     );
-    bar.println("[1]: Create bot.py");
+    if verbosity {
+        bar.println(format!("{}[1]:{} Create bot.py",BOLD, CLEAR_FORMAT));
+    }
     create_bot();
     bar.inc(6);
 
-    bar.println("[2]: Create .env and .env.example");
+    if verbosity {
+        bar.println(format!("{}[2]:{} Create .env and .env.example", BOLD, CLEAR_FORMAT));
+    }
     create_dotenv();
     bar.inc(6);
 
-    bar.println("[3]: Create Readme.md");
+    if verbosity {
+        bar.println(format!("{}[3]:{} Create Readme.md", BOLD, CLEAR_FORMAT));
+    }
     create_readme();
     bar.inc(2);
 
-    bar.println("[4]: Create run.sh");
+    if verbosity {
+        bar.println(format!("{}[4]:{} Create run.sh",BOLD, CLEAR_FORMAT));
+    }
     create_run();
     bar.inc(2);
 
-    bar.println("[5]: Create requirements.txt");
+    if verbosity {
+        bar.println(format!("{}[5]:{} Create requirements.txt",BOLD, CLEAR_FORMAT));
+    }
     create_requirements();
     bar.inc(5);
 
-    bar.println("[6]: Run git init");
+    if verbosity {
+        bar.println(format!("{}[6]:{} Run git init",BOLD, CLEAR_FORMAT));
+    }
+
     git_init();
     bar.inc(10);
 
-    bar.println("[7]: Create venv");
+    if verbosity {
+        bar.println(format!("{}[7]:{} Create venv",BOLD, CLEAR_FORMAT));
+    }
     create_venv();
     bar.inc(40);
 
-    bar.println("[8]: Install requirements.txt");
+    if verbosity {
+        bar.println(format!("{}[8]:{} Install requirements.txt",BOLD, CLEAR_FORMAT));
+    }
     install_requirements();
     bar.inc(20);
 
-    bar.println("[9]: Give run.sh permissions");
+    if verbosity {
+        bar.println(format!("{}[9]:{} Give run.sh permissions",BOLD, CLEAR_FORMAT));
+    }
     give_permissions();
     bar.inc(4);
 
