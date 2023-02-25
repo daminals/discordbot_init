@@ -12,8 +12,8 @@ use std::io::Write;
 // use std::path::Path;
 use std::process::{exit, Command, Stdio};
 // use clap::Command as cliCommand;
-// use clap::{Arg};
 use clap::Parser;
+use clap::{Arg, ArgAction, ArgMatches};
 
 mod config;
 
@@ -30,8 +30,9 @@ static CLEAR_FORMAT: &str = "\u{001b}[0m";
 )]
 
 struct Arguments {
-    #[clap(short, long, default_value = "true")]
-    verbose: bool, // default is true
+    // Quiet mode - No output of which step is being done
+    #[clap(short, long, help = "Suppresses output of which step is being done", action=ArgAction::SetTrue)]
+    quiet: bool, // default is false
 }
 
 fn main() {
@@ -44,13 +45,17 @@ fn main() {
     })
     .expect("Error setting Ctrl-C handler");
 
-    create_discord_bot_project(args.verbose);
+    create_discord_bot_project(!args.quiet);
 }
 
-fn create_discord_bot_project(verbosity: bool) {
-    println!("+================================+");
-    println!("+ {}Creating discord bot project{}   +",BOLD, CLEAR_FORMAT);
-    println!("+================================+");
+fn create_discord_bot_project(verbose: bool) {
+    if verbose {
+        println!("+================================+");
+    }
+    println!("+  {}Creating discord bot project{}  +", BOLD, CLEAR_FORMAT);
+    if verbose {
+        println!("+================================+");
+    }
     // println!("[1]: Create bot.py");
     // println!("[2]: Create .env and .env.example");
     // println!("[3]: Create Readme.md");
@@ -63,61 +68,73 @@ fn create_discord_bot_project(verbosity: bool) {
 
     let bar = ProgressBar::new(100);
     bar.set_style(
-        ProgressStyle::with_template("[{elapsed}][{wide_bar:.green}]({eta})")
+        ProgressStyle::with_template("[\u{001b}[1m{elapsed}\u{001b}[0m][{wide_bar:.green}](\u{001b}[1m{eta}\u{001b}[0m)")
             .unwrap()
             .progress_chars("#>-"),
     );
-    if verbosity {
-        bar.println(format!("{}[1]:{} Create bot.py",BOLD, CLEAR_FORMAT));
+    if verbose {
+        bar.println(format!("{}[1]:{} Create bot.py", BOLD, CLEAR_FORMAT));
     }
     create_bot();
     bar.inc(6);
 
-    if verbosity {
-        bar.println(format!("{}[2]:{} Create .env and .env.example", BOLD, CLEAR_FORMAT));
+    if verbose {
+        bar.println(format!(
+            "{}[2]:{} Create .env and .env.example",
+            BOLD, CLEAR_FORMAT
+        ));
     }
     create_dotenv();
     bar.inc(6);
 
-    if verbosity {
+    if verbose {
         bar.println(format!("{}[3]:{} Create Readme.md", BOLD, CLEAR_FORMAT));
     }
     create_readme();
     bar.inc(2);
 
-    if verbosity {
-        bar.println(format!("{}[4]:{} Create run.sh",BOLD, CLEAR_FORMAT));
+    if verbose {
+        bar.println(format!("{}[4]:{} Create run.sh", BOLD, CLEAR_FORMAT));
     }
     create_run();
     bar.inc(2);
 
-    if verbosity {
-        bar.println(format!("{}[5]:{} Create requirements.txt",BOLD, CLEAR_FORMAT));
+    if verbose {
+        bar.println(format!(
+            "{}[5]:{} Create requirements.txt",
+            BOLD, CLEAR_FORMAT
+        ));
     }
     create_requirements();
     bar.inc(5);
 
-    if verbosity {
-        bar.println(format!("{}[6]:{} Run git init",BOLD, CLEAR_FORMAT));
+    if verbose {
+        bar.println(format!("{}[6]:{} Run git init", BOLD, CLEAR_FORMAT));
     }
 
     git_init();
     bar.inc(10);
 
-    if verbosity {
-        bar.println(format!("{}[7]:{} Create venv",BOLD, CLEAR_FORMAT));
+    if verbose {
+        bar.println(format!("{}[7]:{} Create venv", BOLD, CLEAR_FORMAT));
     }
     create_venv();
     bar.inc(40);
 
-    if verbosity {
-        bar.println(format!("{}[8]:{} Install requirements.txt",BOLD, CLEAR_FORMAT));
+    if verbose {
+        bar.println(format!(
+            "{}[8]:{} Install requirements.txt",
+            BOLD, CLEAR_FORMAT
+        ));
     }
     install_requirements();
     bar.inc(20);
 
-    if verbosity {
-        bar.println(format!("{}[9]:{} Give run.sh permissions",BOLD, CLEAR_FORMAT));
+    if verbose {
+        bar.println(format!(
+            "{}[9]:{} Give run.sh permissions",
+            BOLD, CLEAR_FORMAT
+        ));
     }
     give_permissions();
     bar.inc(4);
