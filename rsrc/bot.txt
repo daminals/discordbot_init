@@ -14,6 +14,7 @@ bot = commands.Bot(command_prefix='?', intents=intents)
 
 @bot.event
 async def on_ready():
+    await bot.wait_until_ready()
     await bot.tree.sync()
     print(f"We have logged in as {bot.user}")
 
@@ -21,6 +22,9 @@ async def on_ready():
 # for testing purposes, it may be useful to specify one server to run on
 @bot.hybrid_command(name='ping', description='ping pong')
 async def ping(ctx):
+    # must defer for slash commands - if takes longer than 
+    # 3 seconds to respond, will fail without defer
+    await ctx.defer()
     await ctx.send(f"pong!")
 
 bot.run(TOKEN)
