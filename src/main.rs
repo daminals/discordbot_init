@@ -33,6 +33,10 @@ struct Arguments {
     // Quiet mode - No output of which step is being done
     #[clap(short, long, help = "Suppresses output of which step is being done", action=ArgAction::SetTrue)]
     quiet: bool, // default is false
+
+    #[clap(short, long, help = "Suppresses output of which step is being done", action=ArgAction::SetTrue)]
+    traditional: bool, // default is false
+
 }
 
 fn main() {

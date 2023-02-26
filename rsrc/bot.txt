@@ -2,6 +2,7 @@
 # Daniel Kogan
 
 from discord.ext import commands
+from discord import app_commands
 from dotenv import load_dotenv
 import discord, os
 
@@ -9,14 +10,17 @@ intents = discord.Intents.all()
 load_dotenv()
 TOKEN = os.environ.get('TOKEN', 3)
 
-bot = commands.Bot(command_prefix="?", intents=intents)
+bot = commands.Bot(command_prefix='?', intents=intents)
 
 @bot.event
 async def on_ready():
+    await bot.tree.sync()
     print(f"We have logged in as {bot.user}")
 
-@bot.command()
+# slash command may take up to one hour to load on all servers
+# for testing purposes, it may be useful to specify one server to run on
+@bot.hybrid_command(name='ping', description='ping pong')
 async def ping(ctx):
-    await ctx.send("pong")
+    await ctx.send(f"pong!")
 
 bot.run(TOKEN)
