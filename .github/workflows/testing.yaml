@@ -50,6 +50,8 @@ jobs:
     - name: Run Test Cases
       run: bin/discordinit_tests -S --verbose=0 --timeout 30
 
-    - name: Delete Test Output
-      run: rm -rf test_output/* && touch test_output/.gitkeep
+    - name: Cleanup
+      run: |
+        rm -rf test_output/* && touch test_output/.gitkeep
+        rm src/main.c
 
