@@ -27,10 +27,12 @@ jobs:
       run: |
         echo "#include <stdio.h>" > src/main.c
         echo "int main() { printf(\"Hello World\"); }" >> src/main.c
-        cat src/main.c
+        # cat src/main.c
 
     - name: Clean bin and make
-      run: make -f MakeFile clean all -C . && echo "build done"
+      run: | 
+            cc test/discordinit_tests.c -lcriterion
+            # make -f MakeFile clean all -C . && echo "build done"
 
     - name: Set Test Environment Vars
       run: |
