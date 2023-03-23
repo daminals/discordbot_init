@@ -31,7 +31,10 @@ jobs:
 
     - name: Clean bin and make
       run: | 
-            cc test/discordinit_tests.c -lcriterion
+            cc tests/discordinit_tests.c -lcriterion
+            ls
+            cd tests
+            ls
             # make -f MakeFile clean all -C . && echo "build done"
 
     - name: Set Test Environment Vars
