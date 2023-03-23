@@ -50,7 +50,7 @@ jobs:
         cd ..
 
     - name: Run Test Cases
-      run: bin/discordinit_tests -S --verbose=0 --timeout 30
+      run: tests/discordinit_tests -S --verbose=0 --timeout 30
 
     - name: Cleanup
       run: |
